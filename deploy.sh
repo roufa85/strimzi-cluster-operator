@@ -19,15 +19,35 @@ oc apply -f 03-deployments/
 
 oc rollout status deployment/strimzi-cluster-operator
 
-# oc apply -f 04-crs/00-ephemeral-kafka-cr.yaml
+oc apply -f 04-crs/00-ephemeral-kafka-cr.yaml
 
-# sleep 10s;
+sleep 10s;
 
-# oc get sts/ephemeral-zookeeper --watch --request-timeout=30s
+oc get sts/ephemeral-zookeeper --watch --request-timeout=30s
 
-# oc get sts/ephemeral-kafka --watch --request-timeout=30s
+oc get sts/ephemeral-kafka --watch --request-timeout=30s
 
-# oc apply -f 04-crs/01-ephemeral-connect-cr.yaml
+oc apply -f 04-crs/01-ephemeral-topics-cr.yaml
+
+oc get kt
+sleep 5s;
+
+oc exec -it ephemeral-kafka-0 -c kafka -- bin/kafka-topics.sh --zookeeper localhost:2181 --describe --topic test-topic
+
+oc apply -f 04-crs/02-ephemeral-connect-cr.yaml
+
+oc rollout status deployment/ephemeral-connect
+
+oc apply -f 04-crs/03-ephemeral-connector-cr.yaml
+
+oc exec -i -c kafka ephemeral-kafka-0 -- curl -X GET http://ephemeral-connect-api:8083/connectors/
+sleep 5s;
+
+oc exec -i -c kafka ephemeral-kafka-0 -- curl -X GET http://ephemeral-connect-api:8083/connectors/ephemeral-source-connector/status/
+
+oc exec -i -c kafka ephemeral-kafka-0 -- /opt/kafka/bin/kafka-console-consumer.sh \
+    --bootstrap-server ephemeral-kafka-bootstrap:9092 \
+    --topic test-topic --from-beginning
 
 # oc delete project ${OPENSHIFT_NS}
 

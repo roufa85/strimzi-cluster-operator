@@ -1,21 +1,22 @@
 apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaConnect
 metadata:
-  name: my-connect-cluster
-#  annotations:
-#  # use-connector-resources configures this KafkaConnect
-#  # to use KafkaConnector resources to avoid
-#  # needing to call the Connect REST API directly
-#    strimzi.io/use-connector-resources: "true"
+  name: ephemeral
+  annotations:
+ # use-connector-resources configures this KafkaConnect
+ # to use KafkaConnector resources to avoid
+ # needing to call the Connect REST API directly
+   strimzi.io/use-connector-resources: "true"
 spec:
   version: 2.4.0
   replicas: 1
-  bootstrapServers: my-cluster-kafka-bootstrap:9093
+  bootstrapServers: ephemeral-kafka-bootstrap:9093
   tls:
     trustedCertificates:
-      - secretName: my-cluster-cluster-ca-cert
+      - secretName: ephemeral-cluster-ca-cert
         certificate: ca.crt
   config:
-    config.storage.replication.factor: 1
-    offset.storage.replication.factor: 1
-    status.storage.replication.factor: 1
+    group.id: ephemeral-connect
+    config.storage.topic: ephemeral-connect-configs
+    status.storage.topic: ephemeral-connect-status
+    offset.storage.topic: ephemeral-connect-offsets
