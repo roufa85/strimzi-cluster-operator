@@ -52,3 +52,17 @@ oc exec -i -c kafka ephemeral-kafka-0 -- /opt/kafka/bin/kafka-console-consumer.s
 # oc delete project ${OPENSHIFT_NS}
 
 # oc logout
+
+
+curl -k -XPUT http://localhost:8083/connectors/connector-elastic/config/ -H 'Content-Type: application/json' -H 'Accept: application/json' -d '{
+    "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+    "tasks.max": "2",
+    "topics": "test-topic",
+    "key.ignore": "true",
+    "connection.url": "http://elastic-svc:9200",
+    "type.name": "index",
+    "name": "connector-elastic",
+    "schema.ignore": "true",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false"
+}'

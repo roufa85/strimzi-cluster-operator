@@ -46,7 +46,7 @@ spec:
         - name: STRIMZI_KAFKA_CONNECT_IMAGES
           value: |
             2.3.1=strimzi/kafka:0.16.2-kafka-2.3.1
-            2.4.0=raoufsalem/kafka-connect-es:0.16.2-kafka-2.4.0
+            2.4.0=raoufsalem/kafka-connect:0.16.2-kafka-2.4.0-es-5.1.4
         - name: STRIMZI_KAFKA_CONNECT_S2I_IMAGES
           value: |
             2.3.1=strimzi/kafka:0.16.2-kafka-2.3.1
