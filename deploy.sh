@@ -38,31 +38,37 @@ oc apply -f 04-crs/02-ephemeral-connect-cr.yaml
 
 oc rollout status deployment/ephemeral-connect
 
-oc apply -f 04-crs/03-ephemeral-connector-cr.yaml
+oc apply -f 04-crs/03-ephemeral-file-connector-cr.yaml
 
 oc exec -i -c kafka ephemeral-kafka-0 -- curl -X GET http://ephemeral-connect-api:8083/connectors/
-sleep 5s;
+sleep 15s;
+
+oc apply -f 04-crs/04-ephemeral-es-connector-cr.yaml
 
 oc exec -i -c kafka ephemeral-kafka-0 -- curl -X GET http://ephemeral-connect-api:8083/connectors/ephemeral-source-connector/status/
+
+oc exec -i -c kafka ephemeral-kafka-0 -- curl -X GET http://ephemeral-connect-api:8083/connectors/ephemeral-es-connector/status/
 
 oc exec -i -c kafka ephemeral-kafka-0 -- /opt/kafka/bin/kafka-console-consumer.sh \
     --bootstrap-server ephemeral-kafka-bootstrap:9092 \
     --topic test-topic --from-beginning
+
+# oc delete -Rf ./
 
 # oc delete project ${OPENSHIFT_NS}
 
 # oc logout
 
 
-curl -k -XPUT http://localhost:8083/connectors/connector-elastic/config/ -H 'Content-Type: application/json' -H 'Accept: application/json' -d '{
-    "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
-    "tasks.max": "2",
-    "topics": "test-topic",
-    "key.ignore": "true",
-    "connection.url": "http://elastic-svc:9200",
-    "type.name": "index",
-    "name": "connector-elastic",
-    "schema.ignore": "true",
-    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
-    "value.converter.schemas.enable": "false"
-}'
+# curl -k -XPUT http://localhost:8083/connectors/connector-elastic/config/ -H 'Content-Type: application/json' -H 'Accept: application/json' -d '{
+#     "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+#     "tasks.max": "2",
+#     "topics": "test-topic",
+#     "key.ignore": "true",
+#     "connection.url": "http://elastic-svc:9200",
+#     "type.name": "index",
+#     "name": "connector-elastic",
+#     "schema.ignore": "true",
+#     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+#     "value.converter.schemas.enable": "false"
+# }'
