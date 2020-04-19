@@ -9,6 +9,7 @@ metadata:
    strimzi.io/use-connector-resources: "true"
 spec:
   version: 2.4.0
+  image: raoufsalem/kafka-connect-es:0.16.2-kafka-2.4.0
   replicas: 1
   bootstrapServers: ephemeral-kafka-bootstrap:9093
   tls:
