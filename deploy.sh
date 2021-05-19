@@ -9,13 +9,13 @@ oc new-project ${OPENSHIFT_NS}
 #####################################################################################
 #####################################################################################
 
-oc apply -f 00-service-account/
+kubectl apply -f 00-crds/
 
-oc apply -f 01-rbacs/
+kubectl apply -f 01-rbacs/
 
-oc apply -f 02-crds/
+kubectl apply -f 02-service-account/
 
-oc apply -f 03-deployments/
+kubectl apply -f 03-deployments/
 
 oc rollout status deployment/strimzi-cluster-operator
 
