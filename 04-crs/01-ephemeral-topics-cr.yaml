@@ -1,48 +1,12 @@
 apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaTopic
 metadata:
-  name: test-topic
+  name: my-topic
   labels:
-    strimzi.io/cluster: ephemeral
-spec:
-  partitions: 10
-  replicas: 1
-  config:
-    retention.ms: 7200000
-    segment.bytes: 1073741824
----
-apiVersion: kafka.strimzi.io/v1beta1
-kind: KafkaTopic
-metadata:
-  name: ephemeral-connect-configs
-  labels:
-    strimzi.io/cluster: ephemeral
+    strimzi.io/cluster: my-cluster
 spec:
   partitions: 1
   replicas: 1
   config:
-    cleanup.policy: compact
----
-apiVersion: kafka.strimzi.io/v1beta1
-kind: KafkaTopic
-metadata:
-  name: ephemeral-connect-offsets
-  labels:
-    strimzi.io/cluster: ephemeral
-spec:
-  partitions: 25
-  replicas: 1
-  config:
-    cleanup.policy: compact
----
-apiVersion: kafka.strimzi.io/v1beta1
-kind: KafkaTopic
-metadata:
-  name: ephemeral-connect-status
-  labels:
-    strimzi.io/cluster: ephemeral
-spec:
-  partitions: 5
-  replicas: 1
-  config:
-    cleanup.policy: compact
+    retention.ms: 7200000
+    segment.bytes: 1073741824
